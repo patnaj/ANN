@@ -87,26 +87,21 @@ class DataSet():
         # self.x, self.y = prepare_divaide(
         #     self.images) if div else prepare_edge(self.images)
         self.x, self.y = prepare_divaide(
-            self.images) if div else (self.images, self.images)
-            
-
-        # self.rot = torchvision.transforms.
+            self.images) if div else (self.images, self.images.clone())
 
     def augment(self,x, y):
         if self.aug:
             rot = int(torch.rand(1)*180)
-            # idx = (torch.rand(self.batch)*n).long()    
             x = torchvision.transforms.functional.rotate(x, rot, fill=1.)
-            y = torchvision.transforms.functional.rotate(y, rot)
-            
+            y = torchvision.transforms.functional.rotate(y, rot)            
         if not self.div:
-            _, y = prepare_edge(y)
+            _, y = prepare_edge(x)
         return x, y
 
     def next_batch(self):
         n = self.x.size(0)
         idx = (torch.rand(self.batch)*n).long()
-        # x, y = self.x[idx], self.y[idx]
+        x, y = self.x[idx], self.y[idx]
         yield self.augment( self.x[idx], self.y[idx] )
         
     def __iter__(self) -> Iterator[torch.Tensor]:
