@@ -33,7 +33,7 @@ loss_fn = torch.nn.MSELoss(reduction="mean")
 for epoche in range(7):
     err = 0
     true_error = 0
-    for step in range(350):
+    for step in range(150):
         x, y_true = next(iter(dataset_train))
 
         x = x.to(device)
@@ -65,18 +65,12 @@ y_pred = model(x).cpu().detach()
 eval_error = loss_fn(y_pred, y_true).item()
 print("eval_dataset_error: %f" % eval_error)
 
-show_images(x[:2],y_true[:2])
-show_images(y_true[:2]-y_pred[:2] ,y_pred[:2])
-
-
-
-y_pred = model(x).cpu().detach()
-eval_error = loss_fn(y_pred, y_true).item()
-print("eval_dataset_error: %f" % eval_error)
-
-show_images(x[:2],y_true[:2])
-show_images(y_true[:2]-y_pred[:2] ,y_pred[:2])
-t1,t2 = prepare_edge(x[:2])
+print("Y from dataset")
+show_images(x[:1],y_true[:1])
+print("Y from model")
+show_images(y_true[:1]-y_pred[:1] ,y_pred[:1])
+t1,t2 = prepare_edge(x[:1])
+print("Y from edge detection fun")
 show_images(t1,t2)
 
-
+# %%
