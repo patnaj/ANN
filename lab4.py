@@ -1,6 +1,6 @@
 # init block
 # %%
-import torch
+import torch 
 import os
 import matplotlib.pyplot as plt
 import sys
@@ -17,7 +17,7 @@ batch = 10
 dataset_test = DataSet(batch=batch)
 # dataset_train = dataset_test
 p = os.path.join('lab4_dataset', 'train', '*.png')
-dataset_train = DataSet(path=p, batch=batch, div=False, aug=True)
+dataset_train = DataSet(path=p, batch=batch, test_set=False, aug=True)
 
 # train block
 # %%
@@ -49,8 +49,9 @@ for epoche in range(7):
         true_error += loss_fn(y_pred, y_true).item()
         print("\rerror = %f , real= %f" % (err, true_error), end="")
     print("\repoch= %d error= %f, real=%f" % (epoche, err, true_error))
-    show_images(model.conv1.weight.clone().cpu().detach())
-    show_images(y_true[:2], y_pred[:2].cpu().detach())
+    show_images(model.conv1.weight.cpu().detach(), isimg=False)
+    show_images(y_true[:2].cpu(), y_pred[:2].cpu().detach())
+    # show_images(x[:2].cpu(), y_pred[:2].cpu().detach())
     
     
 model.save()
@@ -61,10 +62,12 @@ model.load()
 model.eval()
 # pred on dataset
 x, y_true = next(iter(dataset_test))
+x = x.to(device)
 y_pred = model(x).cpu().detach()
 eval_error = loss_fn(y_pred, y_true).item()
 print("eval_dataset_error: %f" % eval_error)
 
+x = x.cpu()
 print("Y from dataset")
 show_images(x[:1],y_true[:1])
 print("Y from model")
