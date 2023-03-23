@@ -85,8 +85,10 @@ print(y_pred[:1].max(dim=1)[0])
 
 # %%
 model = model.cpu()
+x, y_true = next(iter(dataset_test))
 xx = torch.zeros(1,1, 300,300)
-xx[0,0,30:30+28, 40:40+28] = x[0,0,:,:]
+off = (torch.rand(2)*(300-28)).int()
+xx[0,0,off[0]:off[0]+28, off[1]:off[1]+28] = x[0,0,:,:]
 show_images(xx[:1])
 y_pred = model(xx).detach()
 
@@ -97,15 +99,5 @@ print(y_pred[:1].max(dim=1)[0])
 
 show_images(xx[:1])
 show_images(y_pred[:1].max(dim=1)[0].unsqueeze(1))
-
-
-
-print("Y from dataset")
-show_images(x[:1], y_true[:1])
-print("Y from model")
-show_images(y_true[:1]-y_pred[:1], y_pred[:1])
-t1, t2 = prepare_edge(x[:1])
-print("Y from edge detection fun")
-show_images(t1, t2)
 
 # %%

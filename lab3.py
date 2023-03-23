@@ -113,11 +113,9 @@ model.save()
 model.eval()
 # pred on dataset
 x, y_dataset, y_true = dataset
-x, y_true = x.to(device), y_true.to(device)
 y_pred = model(x)
 eval_error = loss_fn(y_pred, y_true).item()
 print("eval_dataset_error: %f" % eval_error)
-x, y_true, y_pred = x.cpu(), y_true.cpu(), y_pred.cpu()
 data_plot(["Pred(dataset_x)", "Dataset(dataset_x)"],
           x, y_pred.detach(), y_dataset)
 data_plot(["Pred(dataset_x)", "Fun(dataset_x)"], x, y_pred.detach(), y_true)
@@ -127,11 +125,8 @@ data_plot(["Pred(dataset_x)", "Fun(dataset_x)"], x, y_pred.detach(), y_true)
 # %%
 model.eval()
 x, y_true = data_fun(dataset[0].size(0))
-x = x.to(device)
-y_true = y_true.to(device)
 y_pred = model(x)
 eval_error = loss_fn(y_pred, y_true).item()
 print("eval_random_error: %f" % eval_error)
-data_plot(["Pred(rand x)", "Fun(rand x)"], x.cpu(),
-          y_pred.cpu().detach(), y_true.cpu())
+data_plot(["Pred(rand x)", "Fun(rand x)"], x, y_pred.detach(), y_true)
 # %%

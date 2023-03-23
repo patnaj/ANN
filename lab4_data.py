@@ -42,8 +42,7 @@ def prepare_divaide(data):
     return data_x, 1. - data_y
 
 
-def show_images(x, y=None, isimg = True ):
-    vmin, vmax, cmap = (0.,1.,'gray') if isimg else (None, None, None)
+def show_images(x, y=None, vmin=None, vmax=None):
     xd = x.permute(0, 2, 3, 1)
     n = xd.size(0)
     if y is not None:
@@ -51,15 +50,15 @@ def show_images(x, y=None, isimg = True ):
         f = plt.figure()
         for i in range(min(n, 10)):
             f.add_subplot(n, 2, (i*2)+1)
-            plt.imshow(xd[i], cmap=cmap, vmin=vmin, vmax=vmax)
+            plt.imshow(xd[i], cmap='gray', vmin=vmin, vmax=vmax)
             f.add_subplot(n, 2, i*2+2)
-            plt.imshow(yd[i], cmap=cmap, vmin=vmin, vmax=vmax)
+            plt.imshow(yd[i], cmap='gray', vmin=vmin, vmax=vmax)
         plt.show()
     else:
         f = plt.figure()
         for i in range(min(n, 10)):
             f.add_subplot(n, 2, i+1)
-            plt.imshow(xd[i], cmap=cmap, vmin=vmin, vmax=vmax)
+            plt.imshow(xd[i], cmap='gray', vmin=vmin, vmax=vmax)
         plt.show()
 
 
@@ -73,10 +72,10 @@ defpath = os.path.join('lab4_dataset', 'test', '*.png')
 
 class DataSet():
 
-    def __init__(self, batch=10, path=defpath, test_set=True, aug = False):
+    def __init__(self, batch=10, path=defpath, div=True, aug = False):
         self.batch = batch
         self.aug = aug
-        self.test_set = test_set
+        self.div = div
 
         files = glob.glob(path)
         images = torch.cat([
@@ -88,34 +87,21 @@ class DataSet():
         # self.x, self.y = prepare_divaide(
         #     self.images) if div else prepare_edge(self.images)
         self.x, self.y = prepare_divaide(
-            self.images) if test_set else (self.images, self.images.clone())
+            self.images) if div else (self.images, self.images.clone())
 
     def augment(self,x, y):
         if self.aug:
             rot = int(torch.rand(1)*180)
             x = torchvision.transforms.functional.rotate(x, rot, fill=1.)
-        x, y = prepare_edge(x)
-        
-        
-        ## here on x you can apply the augmentation code 
-
-
-        return x, y
-        t = torch.rand(2,x.size(0))
-        x = x.transpose(0,3) * t[0,:] + t[0,:]*t[1,:] 
-        # tensors dim [4, 1, 100, 100] * [4] cannot be multiplied
-        # after transpose we have [100, 1, 100, 4]
-        x = x.transpose(0,3)
-        
-        x = x + torch.rand(x.size())*.1    
+            y = torchvision.transforms.functional.rotate(y, rot)            
+        if not self.div:
+            _, y = prepare_edge(x)
         return x, y
 
     def next_batch(self):
         n = self.x.size(0)
         idx = (torch.rand(self.batch)*n).long()
         x, y = self.x[idx], self.y[idx]
-        if self.test_set:
-            yield self.x[idx], self.y[idx]
         yield self.augment( self.x[idx], self.y[idx] )
         
     def __iter__(self) -> Iterator[torch.Tensor]:
@@ -124,13 +110,12 @@ class DataSet():
 
 if __name__ == '__main__':
     p = os.path.join('lab4_dataset', 'train', '*.png')
-    ds = DataSet(batch=4, path=p, test_set=False, aug=True)
+    ds = DataSet(batch=4, path=p, div=False, aug=True)
     x, y = next(iter(ds))
     
     s = next(iter(ds))
     show_images(x,y)
-    # to debug inside DataSet class
-    self = ds
+    self =ds
 
     ds.x.size()
     ds.y.size()
@@ -139,7 +124,6 @@ if __name__ == '__main__':
 
 
     x, y = prepare_divaide(images/255)
-    ## here on x you can test the augmentation code 
     show_images(x, y)
     _, y2 = prepare_edge(x)
     show_images(y, y2)
