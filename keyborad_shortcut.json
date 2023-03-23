@@ -1,5 +1,7 @@
 {
     "key": "ctrl+shift+enter",
     "command": "jupyter.execSelectionInteractive",
-    "when": "editorLangId == 'typescript' || editorTextFocus && isWorkspaceTrusted && !findInputFocussed && !notebookEditorFocused && !replaceInputFocussed && editorLangId == 'python'"
+    "when": "editorTextFocus && isWorkspaceTrusted && !findInputFocussed && !notebookEditorFocused && !replaceInputFocussed && editorLangId == 'python'"
   }
+
+  remove = jupyter.ownsele...
