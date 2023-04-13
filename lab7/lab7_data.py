@@ -11,6 +11,8 @@ import pandas as pd
 # https://www.kaggle.com/datasets/sudalairajkumar/daily-temperature-of-major-cities
 # https://www.kaggle.com/code/damodarabarbosa/daily-temperature-analysis-and-visualization
 
+
+# https://www.kaggle.com/code/kanncaa1/recurrent-neural-network-with-pytorch 
 # https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html 
 # https://towardsdatascience.com/pytorch-basics-how-to-train-your-neural-net-intro-to-rnn-cb6ebc594677
 # https://blog.floydhub.com/a-beginners-guide-on-recurrent-neural-networks-with-pytorch/
@@ -35,7 +37,8 @@ class DataSet():
         idx = (torch.rand(self.batch)*n).long()
         idx = idx.unsqueeze(1).expand(-1, s) + torch.arange(0, s)
         d = self.data[idx]
-        yield self.augment(d[:, :self.x_num, :], d[:, self.x_num:, :])
+        
+        yield self.augment(d[:, :self.x_num, :], d[:, self.x_num:, 0])
 
     def __iter__(self) -> Iterator[torch.Tensor]:
         return iter(self.next_batch())
@@ -71,4 +74,4 @@ if __name__ == '__main__':
     train, test = LoadData(3, 3)
     x, y = next(iter(train))    
     plt.plot(torch.arange(train.x_num), x[0,:,0],'gs'
-             ,torch.arange(train.y_num)+train.x_num,y[0,:,0],'bs')
+             ,torch.arange(train.y_num)+train.x_num,y[0,:],'bs')
