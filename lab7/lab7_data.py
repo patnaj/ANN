@@ -11,6 +11,7 @@ import pandas as pd
 # https://www.kaggle.com/datasets/sudalairajkumar/daily-temperature-of-major-cities
 # https://www.kaggle.com/code/damodarabarbosa/daily-temperature-analysis-and-visualization
 
+# https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html 
 # https://towardsdatascience.com/pytorch-basics-how-to-train-your-neural-net-intro-to-rnn-cb6ebc594677
 # https://blog.floydhub.com/a-beginners-guide-on-recurrent-neural-networks-with-pytorch/
 # https://blog.floydhub.com/long-short-term-memory-from-zero-to-hero-with-pytorch/
