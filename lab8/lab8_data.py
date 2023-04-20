@@ -35,6 +35,9 @@ class DataSet():
 
 
 df = None
+image_x = None
+data_y = None
+
 # data = None
 default_params = [
     "left_eye_center_x",
@@ -50,6 +53,8 @@ default_params = [
 
 def LoadData(batch_size_train=10, batch_size_test=10, params=default_params, train_size=0.7):
     global df
+    global image_x
+    global data_y
     if df is None:
         print("load: './training.zip'")
         df = pd.read_csv('./training.zip',
@@ -58,9 +63,11 @@ def LoadData(batch_size_train=10, batch_size_test=10, params=default_params, tra
         # to avoid scientific notation
         pd.options.display.float_format = '{:.2f}'.format
 
+    if image_x is None:
         image_x = np.array([np.array([float(i) for i in arr.split(" ")]).reshape(96,96,1)  for arr in df["Image"]])
         image_x = torch.tensor(image_x, dtype=torch.float32) / 255.
         
+    if data_y is None:
         data_y = torch.tensor(df[params].to_numpy())
 
     idx_train = (torch.rand(int(image_x.size(0) * train_size))
