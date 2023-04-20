@@ -79,6 +79,5 @@ if __name__ == '__main__':
     xy = zip(default_params ,y[1])
     print(list(xy))
     
-    # img = plt.imshow(x[1])
-    # for i in range(y[1].size(0)>>1):
-    #     plt.plot(y[i*2],y[i*2+1],'r*')
+    img = plt.imshow(x[1])
+    plt.plot(y[1][[0,2,4,6]],y[1][[1,3,5,7]],'r*')
