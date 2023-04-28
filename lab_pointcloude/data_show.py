@@ -2,6 +2,9 @@ import open3d as o3d
 import numpy as np
 import pye57
 
+# alternative app (CloudCompare) to open .e57 files
+# https://www.danielgm.net/cc/
+
 
 def show_pointcloud(points, colors=None, lines=None, line_colors=None):
     if 'o3d' in globals():
