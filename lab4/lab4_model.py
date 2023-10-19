@@ -11,7 +11,6 @@ class ConvModel(torch.nn.Module):
         # self.activation2 = torch.nn.ReLU()
         self.activation = torch.nn.LeakyReLU()
         # self.pad = torch.nn.ReflectionPad2d(1)
-        self.bn = torch.nn.BatchNorm2d(x)
         self.conv1 = torch.nn.Conv2d(in_size, x, (3,3), padding=1)
         # self.conv1 = torch.nn.Conv2d(in_size, x, (3,3), padding=0)
         self.conv2 = torch.nn.Conv2d(x, x, (1,1))
@@ -22,9 +21,9 @@ class ConvModel(torch.nn.Module):
         # x = torch.nn.functional.pad(x, pad=(1, 1, 1, 1), mode='replicate')
 
         x = self.conv1(x)
-        x = self.bn(self.activation(x))        
+        x = self.activation(x)        
         x = self.conv2(x)
-        x = self.bn(self.activation(x))        
+        x = self.activation(x)        
         x = self.conv3(x)
         x = self.activation2(x)
         return x

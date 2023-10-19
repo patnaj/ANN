@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import sys
 if 'lab4_model' in sys.modules: del sys.modules['lab4_model']
 from lab4_model import ConvModel as Model
+if 'lab4_data' in sys.modules: del sys.modules['lab4_data']
 from lab4_data import DataSet, show_images, prepare_edge
 
 in_size = 1
-model = Model(x=4, out_size=1, in_size=in_size)
+model = Model(x=6, out_size=1, in_size=in_size)
 # model.load()
 
 
@@ -29,7 +30,7 @@ model = model.to(device)
 
 print("Train")
 model.train()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.002)
 
 for epoche in range(7):
     err = 0
