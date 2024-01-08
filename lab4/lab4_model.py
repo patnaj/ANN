@@ -35,7 +35,7 @@ class ConvModel(torch.nn.Module):
     def load(self, patch='lab4_model.pt'):
         try:
             self.load_state_dict(torch.load(patch))
-            print("Model saved: %s"%patch)
+            print("Model loaded: %s"%patch)
         except Exception as e:
             print("Load model error: %s"%e)
 
@@ -43,7 +43,7 @@ class ConvModel(torch.nn.Module):
     def info(self):
         print(self)
         print("Params: %i" % sum([param.nelement()
-                                  for param in model.parameters()]))
+                                  for param in self.parameters()]))
 
 
 if __name__ == '__main__':

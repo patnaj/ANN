@@ -11,6 +11,7 @@ from lab4_data import DataSet, show_images, prepare_edge
 
 in_size = 1
 model = Model(x=6, out_size=1, in_size=in_size)
+model.info()
 # model.load()
 
 
@@ -53,7 +54,7 @@ for epoche in range(7):
     print("\repoch= %d error= %f, real=%f" % (epoche, err, true_error))
     show_images(model.conv1.weight.clone().cpu().detach())
     show_images(x[:2].cpu())
-    show_images(y_true[:2], y_pred[:2].cpu().detach())
+    show_images(y_true[:2].cpu(), y_pred[:2].cpu().detach())
     
     
 model.save()
@@ -64,16 +65,21 @@ model.load()
 model.eval()
 # pred on dataset
 x, y_true = next(iter(dataset_test))
+x = x.to(device)
 y_pred = model(x).cpu().detach()
 eval_error = loss_fn(y_pred, y_true).item()
 print("eval_dataset_error: %f" % eval_error)
 
-print("Y from dataset")
-show_images(x[:1],y_true[:1])
-print("Y from model")
-show_images(y_true[:1]-y_pred[:1] ,y_pred[:1])
-t1,t2 = prepare_edge(x[:1])
+print("Y from dataset (ground truth)")
+show_images(x[:1].cpu(),y_true[:1])
+print("Y from model (predicted)")
+show_images(x[:1].cpu(), y_pred[:1] )
+print("difference  abs( (ground truth) - (predicted) )")
+tmp = torch.abs(y_true[:1]-y_pred[:1])
+show_images(tmp, vmax=tmp.max())
+t1,t2 = prepare_edge(x[:1].cpu())
 print("Y from edge detection fun")
 show_images(t1,t2)
 
 # %%
+x.size()
