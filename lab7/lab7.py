@@ -55,9 +55,12 @@ for epoche in range(epoches):
     for step in range(steps):
         inputs, labels = next(iter(dataset_train))
         
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+                
         # normalizacja (tempaeratura w F zamieniamy na skale 0-1, miesiące 12 na skale 0-1)
-        inputs = inputs / torch.Tensor([110.,12.])
-        labels = labels / torch.Tensor([110.])
+        inputs = inputs / torch.Tensor([110.,12.]).to(device)
+        labels = labels / torch.Tensor([110.]).to(device)
 
         # Zero your gradients for every batch!
         optimizer.zero_grad()
@@ -81,7 +84,7 @@ with torch.no_grad(): # mniejsze urzycie pamieci, wyłączone funcje wstecznej p
     inputs, labels = next(iter(dataset_test))
     #normalizacj
     inputs = inputs / torch.Tensor([110.,12.])
-    outputs = model(inputs) * torch.Tensor([110.])
+    outputs = model(inputs.to(device)).cpu() * torch.Tensor([110.])
     print("predykowane:", outputs.to(int).tolist())
     print("rzeczywiste:", labels.to(int).tolist())
     print("bład:       ", (outputs-labels).to(int).tolist())

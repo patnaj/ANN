@@ -12,8 +12,8 @@ class RNNModel(torch.nn.Module):
         self.block1 = torch.nn.RNN(in_size, hid_size, layer_size, batch_first=True, nonlinearity='relu')
         self.fc = torch.nn.Linear(hid_size, out_size)
 
-    def forward(self, x):
-        h0 = torch.autograd.Variable(torch.zeros(self.layer_size, x.size(0), self.hid_size))
+    def forward(self, x: torch.Tensor):
+        h0 = torch.autograd.Variable(torch.zeros(self.layer_size, x.size(0), self.hid_size, device=x.device))
         out, hn = self.block1(x, h0)
         # print(out.size(), hn.size())
         out = self.fc(out[:, -1, :]) 
