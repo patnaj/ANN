@@ -14,12 +14,27 @@ from lab5_data import LoadData, show_images
 in_ch = 1  # one chanel - grey image
 cla = 10  # MNIST 10 klass [0,1,2,3,4,5,6,7,8,9]
 
+cla = 11 # MINST + Empty char
+empty_char = .2 # liczba pustych znakow
+
+
 model = Model(in_ch, 16, cla)
 # model.load()
 
 
 batch = 100
 dataset_train, dataset_test = LoadData(batch, 1)
+
+
+def GetData(dataset):
+    res = next(iter(dataset));
+    if cla == 1:
+        s = res.size(0)
+        idx = (torch.rand(s*empty_char)*s).long()
+        res[0][idx] = 0.0
+        res[1][idx] = 10    
+    return res
+
 
 # train block
 # %%
@@ -36,7 +51,7 @@ loss_fn = torch.nn.CrossEntropyLoss()
 for epoche in range(7):
     err = 0.
     for step in range(150):
-        x, y_true = next(iter(dataset_train))
+        x, y_true = GetData(dataset_train)
 
         x = x.to(device)
         y_true = y_true.to(device)
@@ -73,7 +88,7 @@ model.save()
 model.load()
 model.eval()
 # pred on dataset
-x, y_true = next(iter(dataset_test))
+x, y_true = GetData(dataset_test)
 x = x.to(device)
 y_pred = model(x).cpu().detach()
 x = x.cpu()
@@ -99,5 +114,18 @@ print(y_pred[:1].max(dim=1)[0])
 
 show_images(xx[:1])
 show_images(y_pred[:1].max(dim=1)[0].unsqueeze(1))
+
+
+print("class %i heatmap"%(y_true[0]))
+show_images(y_pred[:1, y_true[0]].unsqueeze(1))
+print("class %i heatmap:"%(y_true[0]), y_pred[:1,y_true[0]])
+
+
+
+if cla == 11:
+    print("Empty char")
+    show_images(y_pred[:1,10].unsqueeze(1))
+    print("empty class heatmap:", y_pred[:1,10])
+    
 
 # %%
