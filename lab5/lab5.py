@@ -58,7 +58,7 @@ for epoche in range(7):
         print("\rloss_sum = %f" % (err), end="")
     print("\repoch= %d error= %f" % (epoche, err/(batch*3*3)))
     show_images(model.block1.conv1.weight.cpu().detach(), isimg=False)
-    show_images(x[:2])
+    show_images(x[:2].cpu().detach())
     # pred per class
     y = y_pred[:2].max(dim=2)[0].max(dim=2)[0]
     print("per class", y)
